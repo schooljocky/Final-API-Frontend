@@ -1,0 +1,13 @@
+// required modules //
+const app = require('../app');
+const http = require('http');
+
+// Set the port //
+var port = 8085;
+app.set('port', port);
+
+// Create and start the server //
+var server = http.createServer(app);
+server.listen(port, () => {
+    console.log("Listening on port %d", port);
+});
