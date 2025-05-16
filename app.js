@@ -1,14 +1,13 @@
 // required modules //
-var express = require('express');
-var path = require('path');
-var app = express();
+const express = require('express');
+const path = require('path');
 const mongoose = require('mongoose');
+const app = express();
+
 const vhsRoutes = require('./routes/vhs');
 const vhsAPI = require('./routes/api/api-vhs');
 
-// Set up view engine
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'views'));
+// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -17,10 +16,17 @@ mongoose.connect(`mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGOD
     .then(() => console.log("Database connected!"))
     .catch(err => console.error(`Database connection error: ${err}`));
 
-// point / to public folder //
-app.use('/', express.static('public'));
-app.use('/', vhsRoutes);
+// API Routes //
 app.use('/vhs/api/v1', vhsAPI);
+app.use('/', vhsRoutes); 
+
+// Serve Angular static files //
+app.use(express.static(path.join(__dirname, './public/dist/frontend/browser')));
+
+// Angular route //
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/dist/frontend/browser/index.html'));
+});
 
 // setup for module use //
 module.exports = app;

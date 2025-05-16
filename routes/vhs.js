@@ -26,19 +26,6 @@ router.post('/', async (req, res) => {
     }
 });
 
-// poll VHS list for display //
-router.get('/', async (req, res) => {
-    try {
-        const vhsList = await VHS.find({});
-        
-        console.log(vhsList);
-
-        res.render('index', { vhsList: vhsList || [] });
-    } catch (err) {
-        res.status(500).send('Error fetching VHS list');
-    }
-});
-
 // Delete a VHS tape by ID //
 router.get('/delete/:id', async (req, res) => {
     try {
